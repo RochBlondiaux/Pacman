@@ -2,6 +2,7 @@ package me.rochblondiaux.pacman;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -14,17 +15,18 @@ import me.rochblondiaux.pacman.screen.implementation.MenuScreen;
 @Getter
 public class Main implements ApplicationListener {
 
-    private FitViewport viewport;
     private SpriteBatch spriteBatch;
     private ScreenManager screens;
+    private OrthographicCamera camera;
 
     @Override
     public void create() {
-        // Viewport
-        this.viewport = new FitViewport(8, 5);
-
         // Sprite batch
         this.spriteBatch = new SpriteBatch();
+
+        // Camera
+        this.camera = new OrthographicCamera();
+        this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Screens
         this.screens = new ScreenManager(this);
@@ -36,7 +38,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
-        this.viewport.update(width, height, true);
+        this.screens.resize(width, height);
     }
 
     @Override
@@ -63,7 +65,8 @@ public class Main implements ApplicationListener {
     }
 
     private void input() {
-
+        // Screens
+        this.screens.input();
     }
 
     private void update() {

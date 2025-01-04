@@ -11,12 +11,14 @@ import com.badlogic.gdx.utils.Disposable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.rochblondiaux.pacman.Main;
+import me.rochblondiaux.pacman.model.Inputable;
 import me.rochblondiaux.pacman.model.Renderable;
+import me.rochblondiaux.pacman.model.Resizable;
 import me.rochblondiaux.pacman.model.Updatable;
 
 @RequiredArgsConstructor
 @Getter
-public class ScreenManager implements Renderable, Updatable, Disposable {
+public class ScreenManager implements Renderable, Updatable, Disposable, Inputable, Resizable {
 
     private final Main main;
     private Screen currentScreen;
@@ -60,5 +62,17 @@ public class ScreenManager implements Renderable, Updatable, Disposable {
     @Override
     public void dispose() {
         screens.values().forEach(Screen::dispose);
+    }
+
+    @Override
+    public void input() {
+        if (this.currentScreen != null && this.currentScreen instanceof Inputable inputable)
+            inputable.input();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        if (this.currentScreen != null)
+            this.currentScreen.resize(width, height);
     }
 }
