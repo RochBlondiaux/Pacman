@@ -5,14 +5,18 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Disposable;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.rochblondiaux.pacman.Main;
+import me.rochblondiaux.pacman.model.Renderable;
+import me.rochblondiaux.pacman.model.Updatable;
 
 @RequiredArgsConstructor
 @Getter
-public class ScreenManager {
+public class ScreenManager implements Renderable, Updatable, Disposable {
 
     private final Main main;
     private Screen currentScreen;
@@ -39,5 +43,22 @@ public class ScreenManager {
 
     public boolean isCurrent(ScreenType type) {
         return currentScreen == screens.get(type);
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        if (this.currentScreen != null)
+            this.currentScreen.render(Gdx.graphics.getDeltaTime());
+    }
+
+    @Override
+    public void update(float delta) {
+        if (this.currentScreen != null && this.currentScreen instanceof Updatable updatable)
+            updatable.update(delta);
+    }
+
+    @Override
+    public void dispose() {
+        screens.values().forEach(Screen::dispose);
     }
 }
